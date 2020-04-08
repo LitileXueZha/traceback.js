@@ -1,0 +1,45 @@
+{
+  "name": "traceback.js",
+  "version": "1.0.0",
+  "description": "代码回溯。指定文本的位置，格式化显示选定区域",
+  "main": "index.js",
+  "scripts": {
+    "start": "rollup --config rollup.config.dev.js -w",
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LitileXueZha/traceback.js.git"
+  },
+  "keywords": [
+    "stack",
+    "stacktrace",
+    "trace",
+    "traceback",
+    "code",
+    "format"
+  ],
+  "author": "LitileXueZha",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/LitileXueZha/traceback.js/issues"
+  },
+  "homepage": "https://github.com/LitileXueZha/traceback.js#readme",
+  "devDependencies": {
+    "commitizen": "^4.0.4",
+    "cz-conventional-changelog": "^3.1.0",
+    "rollup": "^2.3.2",
+    "rollup-plugin-livereload": "^1.1.0",
+    "rollup-plugin-serve": "^1.0.1",
+    "rollup-plugin-terser": "^5.3.0",
+    "rollup-plugin-typescript2": "^0.27.0",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {},
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}
