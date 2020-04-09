@@ -6,8 +6,15 @@
     <title>Traceback JS</title>
     <script src="dist/index.js"></script>
     <script>
-        console.log(TracebackJS);
+        fetch('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js')
+            .then(res => res.text())
+            .then(data => TracebackJS.init('.traceback-js')(data));
     </script>
+    <style>
+        .traceback-js {
+            margin-left: 300px;
+        }
+    </style>
 </head>
 <body>
     <div class="traceback-js"></div>
