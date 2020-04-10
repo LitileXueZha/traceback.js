@@ -15,6 +15,10 @@ const classNames = {
     item: 'traceback-js_item',
     /** 列表高亮项 */
     highlightRow: 'traceback-js_item highlight_row',
+    /** 列表项索引 */
+    index: 'traceback-js_index',
+    /** 列表项内容 */
+    content: 'traceback-js_content',
 };
 
 
@@ -24,14 +28,14 @@ const classNames = {
  * @param opts 配置对象
  */
 function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
-    const $container = document.querySelector(selectors);
+    const $rootEl = document.querySelector(selectors);
 
-    if ($container === null) {
-        throw new Error(`查询${selectors}失败，请确保页面上存在 traceback.js 的渲染容器`);
+    if ($rootEl === null) {
+        throw new ReferenceError(`查询${selectors}失败，请确保页面上存在此元素`);
     }
     
     return (rawInput: string) => {
-        const $list = document.createElement('ol');
+        const $container = document.createElement('div');
         const $style = document.createElement('style');
         const { separator, start, highlightRow } = opts;
         console.time('tracebackjs');
@@ -42,23 +46,30 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
             if (index < start - 1) return;
 
             let className = classNames.item;
-            const $li = document.createElement('li');
+            const $index = document.createElement('div');
+            const $content = document.createElement('div');
+            const $li = document.createElement('div');
 
             if (index === highlightRow - 1) {
                 className = classNames.highlightRow;
             }
 
+            $index.id = `L${index + 1}`;
+            $index.dataset.lineno = String(index + 1);
+            $index.className = classNames.index;
             $li.className = className;
-            $li.textContent = raw;
-            $list.appendChild($li);
+            $content.className = classNames.content;
+            $content.textContent = raw;
+            $li.appendChild($index);
+            $li.appendChild($content);
+            $container.appendChild($li);
         });
         
-        $list.start = start;
-        $list.className = classNames.container;
-        $container.appendChild($list);
+        $container.className = classNames.container;
+        $rootEl.appendChild($container);
         $style.textContent = stylesheet.replace(/\n\s*/gm, '');
-        $container.appendChild($style);
-        $list.addEventListener('click', (e) => {
+        $rootEl.appendChild($style);
+        $container.addEventListener('click', (e) => {
             console.log(e.target);
         });
         console.timeEnd('tracebackjs')
