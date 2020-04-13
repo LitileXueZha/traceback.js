@@ -1,42 +1,50 @@
 .traceback-js_container {
-    padding: 8px 0;
-    white-space: pre;
-    font-family: Monaco, Consolas, Menlo;
+    width: 780px;
     margin: 0;
-    width: 800px;
-    background-color: #fff;
+    padding: 8px 0;
     border: 1px solid #eee;
     border-radius: 2px;
-    font-size: 14px;
-    line-height: 24px;
-    color: #333;
+    background-color: #fff;
     overflow-x: auto;
+}
+
+.traceback-js_list {
+    border-spacing: 0;
+    color: #333;
+    font-size: 14px;
+    font-family: Monaco, Consolas, Menlo;
+    white-space: pre;
+    line-height: 24px;
     tab-size: 4;
 }
 
-.traceback-js_container .traceback-js_item {
-    display: grid;
-    grid-template-columns: 36px 1fr;
-    /* padding: 0 24px; */
-    padding-right: 8px;
-    cursor: pointer;
+.traceback-js_item {
+    /* padding-right: 8px; */
+    /* cursor: pointer; */
 }
-.traceback-js_container .traceback-js_item.highlight_row,
-.traceback-js_container .traceback-js_item.highlight_row .traceback-js_index::before {
+.traceback-js_item.clicked_row {
+    background-color: rgba(0, 130, 161, .1);
+}
+.traceback-js_item.highlight_row,
+.traceback-js_item.highlight_row .traceback-js_index::before {
     background-color: #009688;
     color: #fff;
-    /* font-weight: bold; */
 }
 
 .traceback-js_index {
-    text-align: right;
+    padding: 0;
+    min-width: 36px;
     color: #999;
+    text-align: right;
+    cursor: pointer;
 }
 .traceback-js_index::before {
     content: attr(data-lineno);
-    color: inherit;
+}
+.traceback-js_index:hover {
+    color: #666;
 }
 
-.traceback-js_container .traceback-js_content {
-    margin-left: 8px;
+.traceback-js_content {
+    padding: 0 16px;
 }

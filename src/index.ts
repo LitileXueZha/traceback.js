@@ -4,17 +4,21 @@ const VERSION = '1.0.0';
 const DEFAULT_OPTS: TracebackOption = {
     start: 1,
     separator: '\n',
-    highlightRow: 14,
+    highlightRow: 10,
 };
 
 /** 样式集合 */
 const classNames = {
-    /** 列表容器 */
+    /** 容器 */
     container: 'traceback-js_container',
+    /** 列表 */
+    list: 'traceback-js_list',
     /** 列表项 */
     item: 'traceback-js_item',
     /** 列表高亮项 */
     highlightRow: 'traceback-js_item highlight_row',
+    /** 列表点击项 */
+    clickedRow: 'clicked_row',
     /** 列表项索引 */
     index: 'traceback-js_index',
     /** 列表项内容 */
@@ -36,42 +40,57 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
     
     return (rawInput: string) => {
         const $container = document.createElement('div');
+        const $table = document.createElement('table');
+        const $tbody = document.createElement('tbody');
         const $style = document.createElement('style');
         const { separator, start, highlightRow } = opts;
         console.time('tracebackjs');
 
-        const rawList = rawInput.split(separator);
+        const rawList = rawInput.split(separator).slice(0,200);
 
         rawList.forEach((raw, index) => {
             if (index < start - 1) return;
 
             let className = classNames.item;
-            const $index = document.createElement('div');
-            const $content = document.createElement('div');
-            const $li = document.createElement('div');
+            const $index = document.createElement('td');
+            const $content = document.createElement('td');
+            const $tr = document.createElement('tr');
 
             if (index === highlightRow - 1) {
                 className = classNames.highlightRow;
             }
 
-            $index.id = `L${index + 1}`;
+            // $index.id = `L${index + 1}`;
             // @ts-ignore
             $index.dataset.lineno = index + 1;
-            $index.className = classNames.index;
-            $li.className = className;
-            $content.className = classNames.content;
             $content.textContent = raw;
-            $li.appendChild($index);
-            $li.appendChild($content);
-            $container.appendChild($li);
+            $index.className = classNames.index;
+            $content.className = classNames.content;
+            $tr.className = className;
+            $tr.appendChild($index);
+            $tr.appendChild($content);
+            $tbody.appendChild($tr);
         });
         
+        $table.className = classNames.list;
         $container.className = classNames.container;
+        $table.appendChild($tbody);
+        $container.appendChild($table);
         $rootEl.appendChild($container);
         $style.textContent = stylesheet;
         $rootEl.appendChild($style);
-        $container.addEventListener('click', (e) => {
-            console.log(e.target);
+
+        let $rowClicked: HTMLElement | null = null;
+
+        $table.addEventListener('click', (e) => {
+            // @ts-ignore
+            const { className, parentNode } = e.target;
+
+            if (className === classNames.index && parentNode !== $rowClicked) {
+                $rowClicked?.classList.remove(classNames.clickedRow);
+                parentNode.classList.add(classNames.clickedRow);
+                $rowClicked = parentNode;
+            }
         });
         console.timeEnd('tracebackjs')
     };
