@@ -1,6 +1,7 @@
 import ts from 'rollup-plugin-typescript2';
 import { terser } from 'rollup-plugin-terser';
-import { string } from 'rollup-plugin-string';
+// import { string } from 'rollup-plugin-string';
+import css from './plugin/css-stringify';
 
 export default {
     input: 'src/index.ts',
@@ -16,7 +17,7 @@ export default {
         },
     ],
     plugins: [
-        string({ include: "./src/*.css" }),
+        css({ include: "./src/*.css" }),
         ts(),
     ],
 };

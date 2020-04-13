@@ -55,7 +55,8 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
             }
 
             $index.id = `L${index + 1}`;
-            $index.dataset.lineno = String(index + 1);
+            // @ts-ignore
+            $index.dataset.lineno = index + 1;
             $index.className = classNames.index;
             $li.className = className;
             $content.className = classNames.content;
@@ -67,7 +68,7 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
         
         $container.className = classNames.container;
         $rootEl.appendChild($container);
-        $style.textContent = stylesheet.replace(/\n\s*/gm, '');
+        $style.textContent = stylesheet;
         $rootEl.appendChild($style);
         $container.addEventListener('click', (e) => {
             console.log(e.target);
