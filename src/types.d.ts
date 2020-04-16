@@ -7,7 +7,15 @@ declare type TracebackOption = {
     /** 高亮位置 */
     highlightRow: number,
     /** 展示行数 */
-    displayRows: string,
+    displayRows: -1 | string | displayRows,
+};
+
+/** 展示行数选项 */
+declare type displayRows = {
+    /** 向上展示行数 */
+    upward: number,
+    /** 向下展示行数 */
+    downward: number,
 };
 
 declare module '*.css';

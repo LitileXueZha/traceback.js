@@ -1,20 +1,31 @@
-export function parseRows(displayRows: string) {
-    const reg = /(\+|-)\d+/g;
-    // 默认展示 10 行
-    const defaultRows = {
-        start: 5,
-        end: 5,
-    };
-    const arrRows = displayRows.match(reg);
+// 展示行数解析规则
+const reg = /^-(\d+)\+(\d+)$/;
+// 默认展示 10 行
+const defaultRows: displayRows = {
+    upward: 5,
+    downward: 5,
+};
 
-    if (!arrRows) return defaultRows;
+export function parseRows(displayRows: TracebackOption['displayRows']): displayRows {
+    let row = {};
 
-    const arrNumRows = arrRows.filter((num) => !isNaN(+num));
+    // 全部显示
+    if (displayRows === -1) {
+        row =  {
+            upward: -1,
+            downward: -1,
+        };
+    } else if (typeof displayRows === 'object') {
+        row = displayRows;
+    } else if (typeof displayRows === 'string' && reg.test(displayRows)) {
+        // @ts-ignore
+        const [, upward, downward] = displayRows.match(reg);
 
-    if (arrNumRows.length === 0) return defaultRows;
-    if (arrRows.length === 1) {
-        const row = arrRows[0];
-
-
+        row = { 
+            upward: +upward, 
+            downward: +downward,
+        };
     }
+
+    return Object.assign({}, defaultRows, row);
 }

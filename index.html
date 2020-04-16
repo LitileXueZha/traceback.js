@@ -8,7 +8,9 @@
     <script>
         fetch('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js')
             .then(res => res.text())
-            .then(data => TracebackJS.init('.traceback-js')(data));
+            .then(data => 
+                TracebackJS.init('.traceback-js', { highlightRow: 8, displayRows: '-10+8' })(data)
+            );
     </script>
     <style>
         .traceback-js {

@@ -1,11 +1,12 @@
 import stylesheet from './index.css';
+import { parseRows } from './utils';
 
-const VERSION = '1.0.0';
+const VERSION = '0.0.1';
 const DEFAULT_OPTS: TracebackOption = {
     start: 1,
     separator: '\n',
-    highlightRow: 44,
-    displayRows: '+4-5',
+    highlightRow: 1,
+    displayRows: '-5+5',
 };
 
 /** 样式集合 */
@@ -36,34 +37,42 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
     const $rootEl = document.querySelector(selectors);
 
     if ($rootEl === null) {
-        throw new ReferenceError(`查询${selectors}失败，请确保页面上存在此元素`);
+        console.warn(`查询${selectors}失败，请确保页面上存在此元素`);
+        return () => {};
     }
     
-    return (rawInput: string) => {
+    return function render(rawInput: string) {
         const $container = document.createElement('div');
         const $table = document.createElement('table');
         const $tbody = document.createElement('tbody');
         const $style = document.createElement('style');
-        const { separator, start, highlightRow } = opts;
-        console.time('tracebackjs');
+        const options = Object.assign({}, DEFAULT_OPTS, opts);
+        const { separator, highlightRow, displayRows, start } = options;
 
-        const rawList = rawInput.split(separator).slice(0,200);
+        const rawList = rawInput.trim().split(separator);
+
+        if (highlightRow > rawList.length) {
+            console.warn('traceback.js渲染异常：高亮行数超出源代码行数');
+            return;
+        }
+        const { upward, downward } = parseRows(displayRows);
 
         rawList.forEach((raw, index) => {
-            if (index < start - 1) return;
+            if (upward !== -1 && index + start < highlightRow - upward) return;
+            if (downward !== -1 && index + start > highlightRow + downward) return;
 
             let className = classNames.item;
             const $index = document.createElement('td');
             const $content = document.createElement('td');
             const $tr = document.createElement('tr');
 
-            if (index === highlightRow - 1) {
+            if (index === highlightRow - start) {
                 className = classNames.highlightRow;
             }
 
             // $index.id = `L${index + 1}`;
             // @ts-ignore
-            $index.dataset.lineno = index + 1;
+            $index.dataset.lineno = index + start;
             $content.textContent = raw;
             $index.className = classNames.index;
             $content.className = classNames.content;
@@ -93,10 +102,8 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
                 $rowClicked = parentNode;
             }
         });
-        console.timeEnd('tracebackjs')
     };
 }
-console.log(DEFAULT_OPTS)
 
 export default {
     version: VERSION,

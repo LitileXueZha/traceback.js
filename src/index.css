@@ -9,6 +9,7 @@
 }
 
 .traceback-js_list {
+    min-width: 100%;
     border-spacing: 0;
     color: #4b4b4b;
     font-size: 14px;
@@ -33,6 +34,7 @@
 
 .traceback-js_index {
     padding: 0;
+    width: 36px;
     min-width: 36px;
     color: #999;
     text-align: right;

@@ -1,8 +1,10 @@
 {
   "name": "traceback.js",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "代码回溯。指定文本的位置，格式化显示选定区域",
-  "main": "index.js",
+  "main": "dist/index.esm.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.min.js",
   "scripts": {
     "start": "rollup --config rollup.config.dev.js -w",
     "build": "rollup -c",
