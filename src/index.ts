@@ -4,7 +4,8 @@ const VERSION = '1.0.0';
 const DEFAULT_OPTS: TracebackOption = {
     start: 1,
     separator: '\n',
-    highlightRow: 10,
+    highlightRow: 44,
+    displayRows: '+4-5',
 };
 
 /** 样式集合 */

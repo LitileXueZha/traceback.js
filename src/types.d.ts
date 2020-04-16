@@ -6,6 +6,8 @@ declare type TracebackOption = {
     separator: string,
     /** 高亮位置 */
     highlightRow: number,
+    /** 展示行数 */
+    displayRows: string,
 };
 
 declare module '*.css';

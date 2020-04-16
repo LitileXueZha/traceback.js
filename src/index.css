@@ -1,5 +1,5 @@
 .traceback-js_container {
-    width: 780px;
+    max-width: 780px;
     margin: 0;
     padding: 8px 0;
     border: 1px solid #eee;
@@ -10,7 +10,7 @@
 
 .traceback-js_list {
     border-spacing: 0;
-    color: #333;
+    color: #4b4b4b;
     font-size: 14px;
     font-family: Monaco, Consolas, Menlo;
     white-space: pre;
@@ -23,11 +23,11 @@
     /* cursor: pointer; */
 }
 .traceback-js_item.clicked_row {
-    background-color: rgba(0, 130, 161, .1);
+    background-color: rgba(0, 128, 128, .1);
 }
 .traceback-js_item.highlight_row,
 .traceback-js_item.highlight_row .traceback-js_index::before {
-    background-color: #009688;
+    background-color: #008080;
     color: #fff;
 }
 
@@ -43,6 +43,7 @@
 }
 .traceback-js_index:hover {
     color: #666;
+    -webkit-user-select: none;
 }
 
 .traceback-js_content {
