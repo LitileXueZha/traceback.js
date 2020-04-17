@@ -3,13 +3,13 @@
   "version": "0.0.1",
   "description": "代码回溯。指定文本的位置，格式化显示选定区域",
   "main": "dist/index.esm.js",
-  "module": "dist/index.esm.js",
-  "browser": "dist/index.min.js",
   "scripts": {
     "start": "rollup --config rollup.config.dev.js -w",
     "build": "rollup -c",
+    "prepublish": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "files": ["dist/index.esm.js", "dist/index.min.js"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/LitileXueZha/traceback.js.git"
