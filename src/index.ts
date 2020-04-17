@@ -29,7 +29,7 @@ const classNames = {
 
 
 /**
- * 
+ *
  * @param selectors DOM 选择符，同 `querySelector`
  * @param opts 配置对象
  */
@@ -40,14 +40,16 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
         console.warn(`查询${selectors}失败，请确保页面上存在此元素`);
         return () => {};
     }
-    
+
     return function render(rawInput: string) {
         const $container = document.createElement('div');
         const $table = document.createElement('table');
         const $tbody = document.createElement('tbody');
         const $style = document.createElement('style');
-        const options = Object.assign({}, DEFAULT_OPTS, opts);
-        const { separator, highlightRow, displayRows, start } = options;
+        const options = { ...DEFAULT_OPTS, ...opts };
+        const {
+            separator, highlightRow, displayRows, start,
+        } = options;
 
         const rawList = rawInput.trim().split(separator);
 
@@ -81,7 +83,7 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
             $tr.appendChild($content);
             $tbody.appendChild($tr);
         });
-        
+
         $table.className = classNames.list;
         $container.className = classNames.container;
         $table.appendChild($tbody);
@@ -97,6 +99,7 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
             const { className, parentNode } = e.target;
 
             if (className === classNames.index && parentNode !== $rowClicked) {
+                // eslint-disable-next-line no-unused-expressions
                 $rowClicked?.classList.remove(classNames.clickedRow);
                 parentNode.classList.add(classNames.clickedRow);
                 $rowClicked = parentNode;

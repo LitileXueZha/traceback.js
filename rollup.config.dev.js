@@ -13,7 +13,7 @@ export default {
         sourcemap: 'inline',
     },
     plugins: [
-        css({ include: "./src/*.css", replacer: code => code.replace(/\n\s*/gm, '') }),
+        css({ include: './src/*.css', replacer: (code) => code.replace(/\n\s*/gm, '') }),
         ts(),
         serve({ port: 9010, contentBase: './' }),
         livereload('dist'),

@@ -1,4 +1,8 @@
-const { createFilter } = require("rollup-pluginutils");
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { createFilter } = require('rollup-pluginutils');
+
+/** 默认压缩规则 */
+const defaultReplacer = (code) => code.replace(/\n\s*/gm, '');
 
 /**
  * 转化 css 文件代码为 js 静态导出。
@@ -8,19 +12,18 @@ const { createFilter } = require("rollup-pluginutils");
  */
 export default function CssStringify(opts = {}) {
     const filter = createFilter(opts.include, opts.exclude);
-
-    // 默认压缩规则
-    if (!opts.replacer) opts.replacer = code => code.replace(/\n\s*/gm, '');
+    const replacer = opts.replacer || defaultReplacer;
 
     return {
         name: 'css-stringify',
         transform(code, id) {
             if (filter(id)) {
                 return {
-                    code: `export default ${JSON.stringify(opts.replacer(code))}`,
+                    code: `export default ${JSON.stringify(replacer(code))}`,
                     map: { mappings: '' },
                 };
             }
+            return undefined;
         },
     };
 }

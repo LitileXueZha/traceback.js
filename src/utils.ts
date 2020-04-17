@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 // 展示行数解析规则
 const reg = /^-(\d+)\+(\d+)$/;
 // 默认展示 10 行
@@ -11,7 +12,7 @@ export function parseRows(displayRows: TracebackOption['displayRows']): displayR
 
     // 全部显示
     if (displayRows === -1) {
-        row =  {
+        row = {
             upward: -1,
             downward: -1,
         };
@@ -21,11 +22,12 @@ export function parseRows(displayRows: TracebackOption['displayRows']): displayR
         // @ts-ignore
         const [, upward, downward] = displayRows.match(reg);
 
-        row = { 
-            upward: +upward, 
+        row = {
+            upward: +upward,
             downward: +downward,
         };
     }
 
+    // eslint-disable-next-line prefer-object-spread
     return Object.assign({}, defaultRows, row);
 }

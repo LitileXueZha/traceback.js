@@ -17,7 +17,7 @@ export default {
         },
     ],
     plugins: [
-        css({ include: "./src/*.css" }),
+        css({ include: './src/*.css' }),
         ts(),
     ],
 };
