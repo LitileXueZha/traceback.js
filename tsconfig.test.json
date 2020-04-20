@@ -1,0 +1,12 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+        "module": "commonjs",
+        "outDir": "dist",
+        "sourceMap": false,
+        "types": ["mocha"]
+    },
+    "include": ["src/*.ts", "test/*.spec.ts"],
+    "exclude": ["node_modules"]
+}
+  

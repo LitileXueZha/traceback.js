@@ -1,8 +1,7 @@
-/* eslint-disable import/prefer-default-export */
 // 展示行数解析规则
 const reg = /^-(\d+)\+(\d+)$/;
 // 默认展示 10 行
-const defaultRows: displayRows = {
+export const defaultRows: displayRows = {
     upward: 5,
     downward: 5,
 };
