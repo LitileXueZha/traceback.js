@@ -1,5 +1,6 @@
-import stylesheet from './index.css';
 import { parseRows } from './utils';
+import formatter from './formatter';
+import renderer, { classNames } from './renderer';
 
 const VERSION = '0.0.1';
 const DEFAULT_OPTS: TracebackOption = {
@@ -9,29 +10,16 @@ const DEFAULT_OPTS: TracebackOption = {
     displayRows: '-5+5',
 };
 
-/** 样式集合 */
-const classNames = {
-    /** 容器 */
-    container: 'traceback-js_container',
-    /** 列表 */
-    list: 'traceback-js_list',
-    /** 列表项 */
-    item: 'traceback-js_item',
-    /** 列表高亮项 */
-    highlightRow: 'traceback-js_item highlight_row',
-    /** 列表点击项 */
-    clickedRow: 'clicked_row',
-    /** 列表项索引 */
-    index: 'traceback-js_index',
-    /** 列表项内容 */
-    content: 'traceback-js_content',
-};
-
 
 /**
- *
- * @param selectors DOM 选择符，同 `querySelector`
- * @param opts 配置对象
+ * 初始化
+ * 
+ * 返回渲染函数，入参即为需要渲染的源文本。
+ * 用法：`TracebackJS.init('.traceback-js', {})(text);`
+ * 
+ * @param {string} selectors DOM 选择符，同 `querySelector`
+ * @param {object} opts 配置对象
+ * @return {function} 渲染函数，参数为源文本
  */
 function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
     const $rootEl = document.querySelector(selectors);
@@ -41,60 +29,26 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
         return () => {};
     }
 
+    const options = {
+        ...DEFAULT_OPTS,
+        ...opts,
+        // 解析展示规则
+        displayRows: parseRows(opts.displayRows || DEFAULT_OPTS.displayRows),
+    };
+
     return function render(rawInput: string) {
-        const $container = document.createElement('div');
-        const $table = document.createElement('table');
-        const $tbody = document.createElement('tbody');
-        const $style = document.createElement('style');
-        const options = { ...DEFAULT_OPTS, ...opts };
-        const {
-            separator, highlightRow, displayRows, start,
-        } = options;
+        const formatRows = formatter(rawInput, options);
+        const $result = renderer(formatRows);
 
-        const rawList = rawInput.trim().split(separator);
-
-        if (highlightRow > rawList.length) {
-            console.warn('traceback.js渲染异常：高亮行数超出源代码行数');
+        if (!$result) {
             return;
         }
-        const { upward, downward } = parseRows(displayRows);
+        $rootEl.appendChild($result);
 
-        rawList.forEach((raw, index) => {
-            if (upward !== -1 && index + start < highlightRow - upward) return;
-            if (downward !== -1 && index + start > highlightRow + downward) return;
-
-            let className = classNames.item;
-            const $index = document.createElement('td');
-            const $content = document.createElement('td');
-            const $tr = document.createElement('tr');
-
-            if (index === highlightRow - start) {
-                className = classNames.highlightRow;
-            }
-
-            // $index.id = `L${index + 1}`;
-            // @ts-ignore
-            $index.dataset.lineno = index + start;
-            $content.textContent = raw;
-            $index.className = classNames.index;
-            $content.className = classNames.content;
-            $tr.className = className;
-            $tr.appendChild($index);
-            $tr.appendChild($content);
-            $tbody.appendChild($tr);
-        });
-
-        $table.className = classNames.list;
-        $container.className = classNames.container;
-        $table.appendChild($tbody);
-        $container.appendChild($table);
-        $rootEl.appendChild($container);
-        $style.textContent = stylesheet;
-        $rootEl.appendChild($style);
-
+        // TODO: 额外的功能转化为插件形式
         let $rowClicked: HTMLElement | null = null;
 
-        $table.addEventListener('click', (e) => {
+        $rootEl.addEventListener('click', (e) => {
             // @ts-ignore
             const { className, parentNode } = e.target;
 
@@ -108,7 +62,39 @@ function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
     };
 }
 
+/**
+ * 渲染为 html 字符串
+ * 
+ * @param {string} rawInput 源文本
+ * @param {TracebackOption} opts 配置对象
+ * @returns {string} html 字符串
+ */
+function renderToString(rawInput: string, opts: TracebackOption = DEFAULT_OPTS): string {
+    const options = {
+        ...DEFAULT_OPTS,
+        ...opts,
+        // 解析展示规则
+        displayRows: parseRows(opts.displayRows || DEFAULT_OPTS.displayRows),
+    };
+    const formatRows = formatter(rawInput, options);
+    const $result = renderer(formatRows);
+
+    if (!$result) {
+        return '';
+    }
+
+    // 创建临时元素，转为 html 字符串
+    const $tmp = document.createElement('div');
+
+    $tmp.appendChild($result);
+    return $tmp.innerHTML;
+}
+
+// TODO: 统一设置配置对象
+function setOptions() {}
+
 export default {
     version: VERSION,
     init,
+    renderToString,
 };

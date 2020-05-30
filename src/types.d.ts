@@ -18,4 +18,14 @@ declare type displayRows = {
     downward: number,
 };
 
+/** 格式化渲染文本行对象 */
+declare type Row = {
+    /** 行号 */
+    lineno: number,
+    /** 行文本 */
+    content: string,
+    /** 是否高亮 */
+    highlighted?: boolean,
+};
+
 declare module '*.css';

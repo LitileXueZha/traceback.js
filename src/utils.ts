@@ -6,6 +6,15 @@ export const defaultRows: displayRows = {
     downward: 5,
 };
 
+/**
+ * 解析展示规则
+ * 
+ * + 数字 `-1`，全部展示
+ * + 字符串 `-6+4`，展示指定行前 6 行、后 4 行
+ * + 对象 `{ upward, downward }`，展示指定行前 `upward` 行、后 `downward` 行
+ * 
+ * @param {string|object} displayRows 展示规则
+ */
 export function parseRows(displayRows: TracebackOption['displayRows']): displayRows {
     let row = {};
 

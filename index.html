@@ -8,9 +8,14 @@
     <script>
         fetch('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js')
             .then(res => res.text())
-            .then(data => 
-                TracebackJS.init('.traceback-js', { highlightRow: 8, displayRows: '-10+8' })(data)
-            );
+            .then(data => {
+                TracebackJS.init('.traceback-js', { highlightRow: 8, displayRows: '-10+8' })(data);
+
+                const $container = document.querySelector('.traceback-js').cloneNode();
+                
+                $container.innerHTML = TracebackJS.renderToString(data, { highlightRow: 10, start: 3 });
+                document.body.append($container);
+            });
     </script>
     <style>
         .traceback-js {
@@ -20,5 +25,6 @@
 </head>
 <body>
     <div class="traceback-js"></div>
+    <hr>
 </body>
 </html>
