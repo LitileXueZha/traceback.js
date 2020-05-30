@@ -2,7 +2,7 @@ import { parseRows } from './utils';
 import formatter from './formatter';
 import renderer, { classNames } from './renderer';
 
-const VERSION = '0.0.1';
+const VERSION = '0.1.2';
 const DEFAULT_OPTS: TracebackOption = {
     start: 1,
     separator: '\n',
