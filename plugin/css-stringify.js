@@ -3,7 +3,7 @@ const { createFilter } = require('rollup-pluginutils');
 
 /** 默认压缩规则 */
 const REG_WHITESPACE = /\r?\n\s*/gm;
-const REG_COMMENT = /\/\*.+\*\//gm;
+const REG_COMMENT = /\/\*.+?\*\//gm;
 const defaultReplacer = (code) => {
     return code
         .replace(REG_WHITESPACE, '')
