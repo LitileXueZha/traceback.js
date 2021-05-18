@@ -1,10 +1,10 @@
 .traceback-js_container {
-    max-width: 780px;
+    width: 100%;
     margin: 0;
     padding: 8px 0;
     border: 1px solid #eee;
     border-radius: 2px;
-    background-color: #fff;
+    /* background-color: #fff; */
     overflow-x: auto;
 }
 
@@ -46,6 +46,7 @@
 .traceback-js_index:hover {
     color: #666;
     -webkit-user-select: none;
+    user-select: none;
 }
 
 .traceback-js_content {

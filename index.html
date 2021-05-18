@@ -9,22 +9,42 @@
         fetch('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js')
             .then(res => res.text())
             .then(data => {
-                TracebackJS.init('.traceback-js', { highlightRow: 8, displayRows: '-10+8' })(data);
+                TracebackJS.init('.traceback-js', { highlightRow: 44, displayRows: '-10+8' })(data);
 
                 const $container = document.querySelector('.traceback-js').cloneNode();
                 
                 $container.innerHTML = TracebackJS.renderToString(data, { highlightRow: 10, start: 3 });
                 document.body.append($container);
             });
+
+        function reset() {
+            TracebackJS.render('.traceback-js', { highlightRow: 44, displayRows: '-10+8' });
+        }
+        function more() {
+            TracebackJS.render('.traceback-js', { displayRows: '-25+25' });
+        }
+        function all1() {
+            TracebackJS.render('.traceback-js', { highlightRow: 1743, displayRows: -1 });
+        }
     </script>
     <style>
         .traceback-js {
-            margin-left: 300px;
+            margin: 0 250px;
+        }
+        .actions {
+            position: fixed;
+            top: 10px;
+            left: 10px;
         }
     </style>
 </head>
 <body>
     <div class="traceback-js"></div>
     <hr>
+    <div class="actions">
+        <button onclick="reset()">重置</button>
+        <button onclick="more()">25行</button>
+        <button onclick="all1()">全部，高亮第1743行</button>
+    </div>
 </body>
 </html>

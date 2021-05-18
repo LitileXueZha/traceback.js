@@ -12,7 +12,7 @@
 npm install traceback.js --save
 ```
 
-可使用的 API 有两个：`init`、`renderToString`
+可使用的 API 有：`init`、`render`、`renderToString`
 
 ### `init`
 
@@ -50,6 +50,15 @@ fetch('sometext.txt')
 + `-1` 展示全部行
 + `'-10+8'` 展示前 10 行、后 8 行
 + `{ upward, downward }` 展示前 upward 行、后 downward 行
+
+### `render`
+
+重用初始化后的内容，根据配置再次渲染：
+
+```javascript
+// 上一步已初始化过 .traceback-js 才会生效
+TracebackJS.render('.traceback-js', opts);
+```
 
 ### `renderToString`
 

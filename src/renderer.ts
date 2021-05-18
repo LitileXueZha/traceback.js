@@ -17,6 +17,7 @@ export const classNames = {
     /** 列表项内容 */
     content: 'traceback-js_content',
 };
+const ID_STYLE = 'traceback-jsid_style';
 
 /**
  * 渲染源文本
@@ -36,6 +37,7 @@ export default function renderer(formatRows: Row[]): HTMLElement | null {
     const $table = document.createElement('table');
     const $tbody = document.createElement('tbody');
 
+    // TODO: 分片渲染，利用 rAF
     formatRows.forEach((row) => {
         const $tr = document.createElement('tr');
         const $index = document.createElement('td');
@@ -65,10 +67,13 @@ export default function renderer(formatRows: Row[]): HTMLElement | null {
     $container.appendChild($table);
 
     // 添加样式
-    const $style = document.createElement('style');
+    if (!document.getElementById(ID_STYLE)) {
+        const $style = document.createElement('style');
 
-    $style.textContent = stylesheet;
-    $container.appendChild($style);
+        $style.id = ID_STYLE;
+        $style.textContent = stylesheet;
+        document.head.appendChild($style);
+    }
 
     return $container;
 }

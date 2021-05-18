@@ -12,6 +12,9 @@ const DEFAULT_OPTS: TracebackOption = {
     displayRows: '-5+5',
 };
 
+/** 已初始化的内容 */
+const cacheTraces: any = {};
+
 
 /**
  * 初始化
@@ -26,25 +29,29 @@ const DEFAULT_OPTS: TracebackOption = {
 function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
     const $rootEl = document.querySelector(selectors);
 
-    if ($rootEl === null) {
+    if (!$rootEl) {
         console.warn(`查询${selectors}失败，请确保页面上存在此元素`);
         return () => {};
     }
 
-    const options = {
-        ...DEFAULT_OPTS,
-        ...opts,
-        // 解析展示规则
-        displayRows: parseRows(opts.displayRows || DEFAULT_OPTS.displayRows),
-    };
-
-    return function render(rawInput: string) {
+    return function useInput(rawInput: string = '') {
+        const options = {
+            ...DEFAULT_OPTS,
+            ...opts,
+            // 解析展示规则
+            displayRows: parseRows(opts.displayRows || DEFAULT_OPTS.displayRows),
+        };
         const formatRows = formatter(rawInput, options);
         const $result = renderer(formatRows);
 
         if (!$result) {
             return;
         }
+        cacheTraces[selectors] = {
+            rawInput,
+            dom: $result,
+            options,
+        };
         $rootEl.appendChild($result);
 
         // TODO: 额外的功能转化为插件形式
@@ -92,11 +99,34 @@ function renderToString(rawInput: string, opts: TracebackOption = DEFAULT_OPTS):
     return $tmp.innerHTML;
 }
 
+function renderAgain(selectors: string, opts?: TracebackOption) {
+    const $rootEl = document.querySelector(selectors);
+    const cache = cacheTraces[selectors];
+
+    if (!$rootEl || !opts || !cache) return;
+
+    // TODO: 几个公共 API 代码库重复。思考更优雅的方案
+    const options = {
+        ...cache.options,
+        ...opts,
+        displayRows: parseRows(opts.displayRows || cache.options.displayRows),
+    };
+    const formatRows = formatter(cache.rawInput, options);
+    const $result = renderer(formatRows);
+
+    if (!$result) return;
+
+    $rootEl.replaceChild($result, cache.dom);
+    cache.options = options;
+    cache.dom = $result;
+}
+
 // TODO: 统一设置配置对象
 function setOptions() {}
 
 export default {
     version: VERSION,
     init,
+    render: renderAgain,
     renderToString,
 };

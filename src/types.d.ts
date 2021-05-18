@@ -28,4 +28,11 @@ declare type Row = {
     highlighted?: boolean,
 };
 
+/** 用于重新渲染的缓存 */
+declare type CacheTraces = {
+    rawInput: string,
+    dom: HTMLElement,
+    options: TracebackOption,
+};
+
 declare module '*.css';
