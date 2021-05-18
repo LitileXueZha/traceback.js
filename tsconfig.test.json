@@ -4,9 +4,10 @@
         "module": "commonjs",
         "outDir": "dist",
         "sourceMap": false,
+        "allowJs": true,
         "types": ["mocha"]
     },
-    "include": ["src/*.ts", "test/*.spec.ts"],
+    "include": ["src/*.ts", "test/*.spec.ts", "plugin/*.js"],
     "exclude": ["node_modules"]
 }
   
