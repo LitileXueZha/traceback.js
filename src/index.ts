@@ -2,7 +2,9 @@ import { parseRows } from './utils';
 import formatter from './formatter';
 import renderer, { classNames } from './renderer';
 
-const VERSION = '0.1.2';
+// @ts-ignore
+// eslint-disable-next-line prefer-destructuring
+const VERSION = process.env.VERSION;
 const DEFAULT_OPTS: TracebackOption = {
     start: 1,
     separator: '\n',

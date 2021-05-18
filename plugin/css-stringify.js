@@ -2,7 +2,13 @@
 const { createFilter } = require('rollup-pluginutils');
 
 /** 默认压缩规则 */
-const defaultReplacer = (code) => code.replace(/\n\s*/gm, '');
+const REG_WHITESPACE = /\r?\n\s*/gm;
+const REG_COMMENT = /\/\*.+\*\//gm;
+const defaultReplacer = (code) => {
+    return code
+        .replace(REG_WHITESPACE, '')
+        .replace(REG_COMMENT, '');
+};
 
 /**
  * 转化 css 文件代码为 js 静态导出。

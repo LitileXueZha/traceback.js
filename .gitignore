@@ -4,6 +4,7 @@ node_modules/
 dist/
 .nyc_output/
 coverage/
+.scannerwork/
 
 *debug.log
 *error.log

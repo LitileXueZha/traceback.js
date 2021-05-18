@@ -9,7 +9,7 @@
 安装：
 
 ```shell
-npm install traceback.js
+npm install traceback.js --save
 ```
 
 可使用的 API 有两个：`init`、`renderToString`
