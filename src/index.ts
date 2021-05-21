@@ -12,63 +12,69 @@ const DEFAULT_OPTS: TracebackOption = {
     displayRows: '-5+5',
 };
 
-/** 已初始化的内容 */
-const cacheTraces: any = {};
-
 
 /**
  * 初始化
  * 
- * 返回渲染函数，入参即为需要渲染的源文本。
+ * 根据选择符匹配的元素内容渲染。
  * 用法：`TracebackJS.init('.traceback-js', {})(text);`
  * 
  * @param {string} selectors DOM 选择符，同 `querySelector`
  * @param {object} opts 配置对象
- * @return {function} 渲染函数，参数为源文本
  */
 function init(selectors: string, opts: TracebackOption = DEFAULT_OPTS) {
     const $rootEl = document.querySelector(selectors);
 
     if (!$rootEl) {
         console.warn(`查询${selectors}失败，请确保页面上存在此元素`);
-        return () => {};
+        return;
     }
 
-    return function useInput(rawInput: string = '') {
-        const options = {
-            ...DEFAULT_OPTS,
-            ...opts,
-            // 解析展示规则
-            displayRows: parseRows(opts.displayRows || DEFAULT_OPTS.displayRows),
-        };
-        const formatRows = formatter(rawInput, options);
-        const $result = renderer(formatRows);
+    const rawInput = $rootEl.textContent?.trim() || '';
+    const $dom = render(rawInput, opts);
 
-        if (!$result) {
-            return;
+    if (!$dom) return;
+
+    $rootEl.textContent = null;
+    $rootEl.appendChild($dom);
+
+    // TODO: 额外的功能转化为插件形式
+    let $rowClicked: HTMLElement | null = null;
+
+    $rootEl.addEventListener('click', (e) => {
+        // @ts-ignore
+        const { className, parentNode } = e.target;
+
+        if (className === classNames.index && parentNode !== $rowClicked) {
+            // eslint-disable-next-line no-unused-expressions
+            $rowClicked?.classList.remove(classNames.clickedRow);
+            parentNode.classList.add(classNames.clickedRow);
+            $rowClicked = parentNode;
         }
-        cacheTraces[selectors] = {
-            rawInput,
-            dom: $result,
-            options,
-        };
-        $rootEl.appendChild($result);
+    });
 
-        // TODO: 额外的功能转化为插件形式
-        let $rowClicked: HTMLElement | null = null;
+    // TODO: 重用渲染
+    // return function reuse(opts);
+}
 
-        $rootEl.addEventListener('click', (e) => {
-            // @ts-ignore
-            const { className, parentNode } = e.target;
-
-            if (className === classNames.index && parentNode !== $rowClicked) {
-                // eslint-disable-next-line no-unused-expressions
-                $rowClicked?.classList.remove(classNames.clickedRow);
-                parentNode.classList.add(classNames.clickedRow);
-                $rowClicked = parentNode;
-            }
-        });
+/**
+ * 渲染为 dom
+ * 
+ * @param rawInput 源文本
+ * @param opts 配置对象
+ * @returns 可供加载到页面上的 dom
+ */
+function render(rawInput: string, opts: TracebackOption): HTMLElement | null {
+    const options = {
+        ...DEFAULT_OPTS,
+        ...opts,
+        // 解析展示规则
+        displayRows: parseRows(opts.displayRows || DEFAULT_OPTS.displayRows),
     };
+    const formatRows = formatter(rawInput, options);
+    const $result = renderer(formatRows);
+
+    return $result;
 }
 
 /**
@@ -99,34 +105,12 @@ function renderToString(rawInput: string, opts: TracebackOption = DEFAULT_OPTS):
     return $tmp.innerHTML;
 }
 
-function renderAgain(selectors: string, opts?: TracebackOption) {
-    const $rootEl = document.querySelector(selectors);
-    const cache = cacheTraces[selectors];
-
-    if (!$rootEl || !opts || !cache) return;
-
-    // TODO: 几个公共 API 代码库重复。思考更优雅的方案
-    const options = {
-        ...cache.options,
-        ...opts,
-        displayRows: parseRows(opts.displayRows || cache.options.displayRows),
-    };
-    const formatRows = formatter(cache.rawInput, options);
-    const $result = renderer(formatRows);
-
-    if (!$result) return;
-
-    $rootEl.replaceChild($result, cache.dom);
-    cache.options = options;
-    cache.dom = $result;
-}
-
 // TODO: 统一设置配置对象
 function setOptions() {}
 
 export default {
     version: VERSION,
     init,
-    render: renderAgain,
+    render,
     renderToString,
 };
