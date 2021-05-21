@@ -1,6 +1,6 @@
 {
   "name": "traceback.js",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "代码回溯。指定文本的位置，格式化显示选定区域",
   "main": "dist/index.esm.js",
   "scripts": {

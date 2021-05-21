@@ -7,24 +7,34 @@
     <script src="dist/index.js"></script>
     <script>
         fetch('https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.js')
-            .then(res => res.text())
-            .then(data => {
-                TracebackJS.init('.traceback-js', { highlightRow: 44, displayRows: '-10+8' })(data);
+        .then(res => res.text())
+        .then(data => {
+                const $tracejs = document.querySelector('.traceback-js');
 
-                const $container = document.querySelector('.traceback-js').cloneNode();
+                window.jQueryText = data;
+                $tracejs.textContent = data;
+                TracebackJS.init('.traceback-js', { highlightRow: 44, displayRows: '-10+8' });
+
+                const $container = $tracejs.cloneNode();
                 
                 $container.innerHTML = TracebackJS.renderToString(data, { highlightRow: 10, start: 3 });
                 document.body.append($container);
             });
 
         function reset() {
-            TracebackJS.render('.traceback-js', { highlightRow: 44, displayRows: '-10+8' });
+            const $tracejs = document.querySelector('.traceback-js');
+            const $dom = TracebackJS.render(window.jQueryText, { highlightRow: 44, displayRows: '-10+8' });
+            $tracejs.replaceChild($dom, $tracejs.firstElementChild);
         }
         function more() {
-            TracebackJS.render('.traceback-js', { displayRows: '-25+25' });
+            const $tracejs = document.querySelector('.traceback-js');
+            const $dom = TracebackJS.render(window.jQueryText, { highlightRow: 44, displayRows: '-25+25' });
+            $tracejs.replaceChild($dom, $tracejs.firstElementChild);
         }
         function all1() {
-            TracebackJS.render('.traceback-js', { highlightRow: 1743, displayRows: -1 });
+            const $tracejs = document.querySelector('.traceback-js');
+            const $dom = TracebackJS.render(window.jQueryText, { highlightRow: 1743, displayRows: -1 });
+            $tracejs.replaceChild($dom, $tracejs.firstElementChild);
         }
     </script>
     <style>

@@ -21,17 +21,11 @@ npm install traceback.js --save
 ```javascript
 import TracebackJS from 'traceback.js';
 
-fetch('sometext.txt')
-    .then(res => res.text())
-    .then((data) =>
-        TracebackJS.init('.traceback-js', { highlightRow: 5 })(data)
-    );
+TracebackJS.init('.traceback-js', { highlightRow: 5 });
 ```
 
 1. 第一个参数 `selectors` 为 css 选择符
 2. 第二个参数 `opts` 为配置对象
-
-`init` 返回了一个渲染函数，可在任意位置调用，参数为源文本。
 
 配置对象 `opts`:
 
@@ -51,13 +45,18 @@ fetch('sometext.txt')
 + `'-10+8'` 展示前 10 行、后 8 行
 + `{ upward, downward }` 展示前 upward 行、后 downward 行
 
-### `render`
+### `render` (底层 API)
 
-重用初始化后的内容，根据配置再次渲染：
+根据源文本，返回渲染 dom：
 
 ```javascript
-// 上一步已初始化过 .traceback-js 才会生效
-TracebackJS.render('.traceback-js', opts);
+fetch('sometext.txt')
+    .then(res => res.text())
+    .then((data) => {
+        const $dom = TracebackJS.render(data, opts);
+
+        insert($dom); // 可供操作的 dom
+    });
 ```
 
 ### `renderToString`
